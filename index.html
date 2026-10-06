@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jelajah Kemanusiaan: Ekspedisi Relawan - PMR SMPN 2 Pekuncen</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['"Cinzel"', 'serif'],
+          },
+          colors: {
+            pmi: {
+              red: '#DC2626',
+              dark: '#991B1B',
+              soft: '#FEF2F2',
+              gold: '#D97706'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Dadu 3D Style */
+    .dice-container {
+      perspective: 600px;
+    }
+    .dice-cube {
+      width: 60px;
+      height: 60px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 1s ease-out;
+    }
+    .dice-face {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: white;
+      border: 2px solid #DC2626;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 800;
+      color: #991B1B;
+      box-shadow: inset 0 0 8px rgba(220, 38, 38, 0.15);
+    }
+    .face-1 { transform: rotateY(0deg) translateZ(30px); }
+    .face-2 { transform: rotateY(90deg) translateZ(30px); }
+    .face-3 { transform: rotateY(180deg) translateZ(30px); }
+    .face-4 { transform: rotateY(-90deg) translateZ(30px); }
+    .face-5 { transform: rotateX(90deg) translateZ(30px); }
+    .face-6 { transform: rotateX(-90deg) translateZ(30px); }
+
+    /* Cetak Piagam */
+    @media print {
+      body * { visibility: hidden; }
+      #certificate-wrap, #certificate-wrap * { visibility: visible; }
+      #certificate-wrap {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 24px;
+        box-shadow: none !important;
+        border: 4px double #991B1B !important;
+      }
+      .no-print { display: none !important; }
+    }
+
+    .tile-active {
+      box-shadow: 0 0 0 3px #DC2626, 0 10px 15px -3px rgba(220, 38, 38, 0.3);
+      transform: translateY(-3px);
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col font-sans selection:bg-red-200">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-red-200">
+          <i class="fa-solid fa-map-location-dot text-lg"></i>
+        </div>
+        <div>
+          <h1 class="font-extrabold text-slate-900 tracking-tight text-sm sm:text-base">JELAJAH KEMANUSIAAN</h1>
+          <p class="text-xs text-red-600 font-bold">PMR MADYA SMP NEGERI 2 PEKUNCEN</p>
+        </div>
+      </div>
+
+      <div id="top-status-bar" class="hidden sm:flex items-center gap-4 text-xs font-bold bg-slate-50 px-3.5 py-1.5 rounded-full border border-slate-200">
+        <div class="flex items-center gap-1.5 text-amber-600">
+          <i class="fa-solid fa-trophy"></i>
+          <span>Poin: <strong id="top-score" class="text-slate-800 text-sm">0</strong></span>
+        </div>
+        <div class="flex items-center gap-1.5 text-red-600">
+          <i class="fa-solid fa-location-crosshairs"></i>
+          <span>Pos: <strong id="top-pos" class="text-slate-800 text-sm">1 / 20</strong></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Konten Utama -->
+  <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 flex flex-col">
+
+    <!-- ================= LAYAR 1: REGISTRASI & PILIH REGU ================= -->
+    <section id="screen-setup" class="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-100 max-w-lg mx-auto my-auto text-center relative overflow-hidden">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 border border-red-200 text-red-700 text-xs font-extrabold mb-4 uppercase tracking-wider">
+        <i class="fa-solid fa-compass"></i> Board Game Digital PMR Madya
+      </div>
+      
+      <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mb-2">Ekspedisi Relawan Spendoe</h2>
+      <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+        Jelajahi 20 Pos Kemanusiaan, atasi keadaan darurat medis, pelajari 7 Prinsip Palang Merah, dan bantu warga terdampak!
+      </p>
+
+      <form id="form-start" onsubmit="initExpedition(event)" class="space-y-4 text-left bg-slate-50 p-5 rounded-2xl border border-slate-200">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Nama Relawan / Ketua Tim</label>
+          <input type="text" id="player-name" required placeholder="Tuliskan nama lengkap Anda"
+            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm bg-white font-medium" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Kelas</label>
+            <select id="player-class" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm bg-white font-medium">
+              <option value="7A">Kelas 7A</option>
+              <option value="7B">Kelas 7B</option>
+              <option value="7C">Kelas 7C</option>
+              <option value="8A">Kelas 8A</option>
+              <option value="8B">Kelas 8B</option>
+              <option value="8C">Kelas 8C</option>
+              <option value="9A">Kelas 9A</option>
+              <option value="9B">Kelas 9B</option>
+              <option value="9C">Kelas 9C</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Pilihan Regu</label>
+            <select id="player-unit" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm bg-white font-medium">
+              <option value="Laskar Nagasasi">Laskar Nagasasi</option>
+              <option value="Garuda Madya">Garuda Madya</option>
+              <option value="Rajawali Spendoe">Rajawali Spendoe</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full mt-2 bg-red-600 hover:bg-red-700 text-white font-extrabold py-3.5 px-6 rounded-xl shadow-lg shadow-red-200 transition-all flex items-center justify-center gap-2 group text-sm">
+          <span>Buka Peta Ekspedisi</span>
+          <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+        </button>
+      </form>
+      <p class="text-xs text-slate-400 mt-4 italic">"Siamo Tutti Fratelli - Kita Semua Bersaudara"</p>
+    </section>
+
+    <!-- ================= LAYAR 2: PAPAN PERMAINAN 20 POS ================= -->
+    <section id="screen-board" class="hidden flex-col gap-6">
+      
+      <!-- Panel Atas: Kontrol Dadu & Dashboard Relawan -->
+      <div class="bg-white rounded-3xl p-5 shadow-lg border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
+        
+        <!-- Info Profil Relawan -->
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-red-100 border border-red-200 flex items-center justify-center text-red-600 text-xl font-bold">
+            <i class="fa-solid fa-user-shield"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="board-name" class="font-extrabold text-slate-900 text-base">Nama Relawan</h3>
+              <span id="board-badge" class="px-2 py-0.5 rounded-full bg-red-50 text-red-700 border border-red-200 text-[10px] font-bold">Laskar Nagasasi</span>
+            </div>
+            <p class="text-xs text-slate-500">PMR Madya Spendoe • Pos Aktif: <strong id="board-current-tile" class="text-slate-800">Pos 1 (Mulai)</strong></p>
+          </div>
+        </div>
+
+        <!-- Inventaris Singkat -->
+        <div class="flex items-center gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200 text-xs">
+          <span class="text-slate-500 font-bold px-2"><i class="fa-solid fa-kit-medical text-red-500 mr-1"></i> Tas P3K:</span>
+          <span id="inv-mitela" class="px-2.5 py-1 bg-white rounded-lg border border-slate-200 text-slate-400 font-medium">Mitela</span>
+          <span id="inv-kasa" class="px-2.5 py-1 bg-white rounded-lg border border-slate-200 text-slate-400 font-medium">Kasa</span>
+          <span id="inv-tandu" class="px-2.5 py-1 bg-white rounded-lg border border-slate-200 text-slate-400 font-medium">Tandu</span>
+        </div>
+
+        <!-- Area Lempar Dadu -->
+        <div class="flex items-center gap-4">
+          <div class="dice-container">
+            <div id="dice" class="dice-cube">
+              <div class="dice-face face-1">1</div>
+              <div class="dice-face face-2">2</div>
+              <div class="dice-face face-3">3</div>
+              <div class="dice-face face-4">4</div>
+              <div class="dice-face face-5">5</div>
+              <div class="dice-face face-6">6</div>
+            </div>
+          </div>
+          <button id="btn-roll" onclick="rollDice()" class="bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3 rounded-2xl shadow-lg shadow-red-200 transition-all flex items-center gap-2 text-sm">
+            <i class="fa-solid fa-dice"></i>
+            <span>Lempar Dadu</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Grid Papan Permainan (20 Pos Kemanusiaan) -->
+      <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-xl border border-slate-200">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-xs font-black uppercase tracking-widest text-slate-400 flex items-center gap-2">
+            <i class="fa-solid fa-route text-red-500"></i> Rute Jalur Ekspedisi 20 Pos
+          </h4>
+          <span class="text-xs font-bold text-slate-500">Capai Pos 20 untuk Menyelesaikan Misi</span>
+        </div>
+
+        <!-- 20 Grid Pos Responsif -->
+        <div id="board-grid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
+          <!-- Diisi via Javascript -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ================= MODAL TANTANGAN POS ================= -->
+    <div id="modal-card" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 transform transition-all">
+        
+        <div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+          <div class="flex items-center gap-2">
+            <span id="modal-badge-type" class="px-2.5 py-1 rounded-md text-[11px] font-black uppercase tracking-wider bg-red-100 text-red-700">Tantangan Medis</span>
+            <span id="modal-pos-number" class="text-xs font-bold text-slate-400">Pos #</span>
+          </div>
+          <span id="modal-points" class="text-xs font-black text-amber-600 bg-amber-50 px-2 py-1 rounded-lg border border-amber-200">+25 Poin</span>
+        </div>
+
+        <h3 id="modal-title" class="text-lg sm:text-xl font-extrabold text-slate-900 mb-2">Judul Misi Pos</h3>
+        <p id="modal-narrative" class="text-slate-600 text-xs sm:text-sm leading-relaxed mb-5 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+          Deskripsi kasus atau peristiwa kemanusiaan di pos ini.
+        </p>
+
+        <!-- Container Opsi Pertanyaan -->
+        <div id="modal-options" class="space-y-2.5 mb-5">
+          <!-- Diisi via JavaScript -->
+        </div>
+
+        <!-- Feedback & Lanjut -->
+        <div id="modal-feedback" class="hidden p-4 rounded-2xl border text-xs sm:text-sm leading-relaxed mb-4">
+          <!-- Text penjelasan edukatif -->
+        </div>
+
+        <button id="modal-btn-next" onclick="closePosModal()" class="w-full bg-slate-900 hover:bg-black text-white font-extrabold py-3 rounded-xl text-xs sm:text-sm transition-all hidden">
+          Lanjutkan Ekspedisi
+        </button>
+
+      </div>
+    </div>
+
+    <!-- ================= LAYAR 3: PIAGAM SERTIFIKAT AKHIR ================= -->
+    <section id="screen-finish" class="hidden flex-col gap-6 max-w-3xl mx-auto w-full my-auto">
+      
+      <!-- Piagam Sertifikat Resmi -->
+      <div id="certificate-wrap" class="bg-white border-8 border-double border-red-700 rounded-3xl p-6 sm:p-10 shadow-2xl text-center relative overflow-hidden">
+        
+        <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+          <i class="fa-solid fa-plus text-[260px] text-red-600"></i>
+        </div>
+
+        <!-- Header Piagam -->
+        <div class="border-b-2 border-slate-300 pb-4 mb-6">
+          <div class="w-12 h-12 mx-auto bg-red-600 rounded-full flex items-center justify-center text-white text-xl font-black mb-2 shadow-md">
+            <i class="fa-solid fa-plus"></i>
+          </div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-wider uppercase font-serif">PALANG MERAH REMAJA (PMR) MADYA</h2>
+          <h3 class="text-xs sm:text-sm font-bold text-red-700 uppercase tracking-widest">SMP NEGERI 2 PEKUNCEN - BANYUMAS</h3>
+          <p class="text-[11px] text-slate-500 mt-1 italic">Piagam Penghargaan Penjelajah Kemanusiaan 2026</p>
+        </div>
+
+        <!-- Isi Piagam -->
+        <div class="my-6 space-y-3">
+          <p class="text-xs uppercase font-bold tracking-widest text-slate-400">Diberikan secara istimewa kepada:</p>
+          <h4 id="cert-player-name" class="text-2xl sm:text-3xl font-black text-slate-900 underline decoration-red-500 underline-offset-8">
+            Nama Siswa
+          </h4>
+          <p class="text-sm font-semibold text-slate-700">
+            Kelas: <span id="cert-player-class" class="font-bold text-slate-900">8A</span> | Regu: <span id="cert-player-unit" class="font-bold text-red-700">Laskar Nagasasi</span>
+          </p>
+
+          <p class="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto leading-relaxed pt-2">
+            Telah berhasil menyelesaikan seluruh rangkaian 20 Pos <strong>Jelajah Kemanusiaan: Ekspedisi Relawan</strong>, menguasai keterampilan pertolongan pertama, prinsip palang merah, serta mitigasi bencana dengan hasil gemilang:
+          </p>
+
+          <div class="inline-block bg-red-50 border-2 border-red-500 px-6 py-2.5 rounded-2xl mt-2">
+            <span id="cert-rank-title" class="text-base sm:text-lg font-black text-red-700 uppercase tracking-wider block">RELAVAN TELADAN UTAMA</span>
+            <span class="text-xs text-slate-600 font-semibold">Total Poin Kemanusiaan: <strong id="cert-total-score" class="text-slate-900">0</strong> Poin</span>
+          </div>
+        </div>
+
+        <!-- Legalitas / Tanda Tangan -->
+        <div class="grid grid-cols-2 gap-4 pt-6 border-t border-slate-200 text-xs text-slate-600 mt-6">
+          <div>
+            <p class="font-medium">Pembina PMR Madya</p>
+            <div class="h-10 flex items-center justify-center font-serif text-slate-400 italic text-sm">
+              [ Terverifikasi Sistem ]
+            </div>
+            <p class="font-bold text-slate-800">SMP Negeri 2 Pekuncen</p>
+          </div>
+          <div>
+            <p class="font-medium">Semboyan Kepalanganmerahan</p>
+            <div class="h-10 flex items-center justify-center font-bold text-red-600 text-xs sm:text-sm">
+              "Inter Arma Caritas"
+            </div>
+            <p class="text-slate-400 text-[11px]" id="cert-print-date">Banyumas, 2026</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tombol Aksi Akhir -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 no-print">
+        <button onclick="window.print()" class="w-full sm:w-auto bg-slate-900 hover:bg-black text-white font-extrabold py-3 px-6 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm">
+          <i class="fa-solid fa-print"></i>
+          <span>Cetak / Simpan PDF Piagam</span>
+        </button>
+        <button onclick="restartExpedition()" class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-extrabold py-3 px-6 rounded-xl shadow-lg shadow-red-200 transition-all flex items-center justify-center gap-2 text-sm">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span>Ulangi Ekspedisi</span>
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-3 text-center text-xs text-slate-400 no-print">
+    <p>© Media Game Edukasi PMR Madya SMP Negeri 2 Pekuncen • Siap Vercel Deployment</p>
+  </footer>
+
+  <!-- ================= JAVASCRIPT GAME LOGIC ================= -->
+  <script>
+    // State Game
+    const state = {
+      player: { name: '', class: '', unit: '' },
+      currentPos: 0, // 0 = Pos 1
+      score: 0,
+      isRolling: false,
+      inventory: { mitela: false, kasa: false, tandu: false },
+      clearedPositions: []
+    };
+
+    // 20 Data Pos Kemanusiaan
+    const boardPositions = [
+      { id: 1, title: "Pos Markas PMR Spendoe", type: "start", icon: "fa-flag", desc: "Pemberangkatan ekspedisi relawan dari SMPN 2 Pekuncen.", isAction: false },
+      { id: 2, title: "Sejarah Solferino", type: "sejarah", icon: "fa-book-bookmark", points: 20, isAction: true,
+        q: "Siapa bapak Palang Merah Internasional yang menginisiasi pertolongan perang Solferino 1859?",
+        options: [
+          { text: "Jean Henry Dunant", correct: true, exp: "Tepat! Henry Dunant menulis 'A Memory of Solferino' yang melahirkan Palang Merah Internasional." },
+          { text: "Florence Nightingale", correct: false, exp: "Florence Nightingale adalah pelopor perawat modern, namun pencetus Palang Merah adalah Jean Henry Dunant." },
+          { text: "Louis Pasteur", correct: false, exp: "Louis Pasteur adalah ilmuwan mikrobiologi." }
+        ]
+      },
+      { id: 3, title: "Prinsip Kemanusiaan", type: "prinsip", icon: "fa-heart", points: 20, isAction: true,
+        q: "Apa arti mendasar dari Prinsip 'Kemanusiaan' (Humanity)?",
+        options: [
+          { text: "Mencegah dan meringankan penderitaan sesama tanpa diskriminasi", correct: true, exp: "Benar! Kemanusiaan bertujuan melindungi jiwa dan kesehatan serta memastikan penghormatan terhadap manusia." },
+          { text: "Hanya menolong warga yang berasal dari daerah yang sama", correct: false, exp: "Salah! Pertolongan palang merah tidak boleh membeda-bedakan asal daerah." },
+          { text: "Memberi bantuan dengan memungut biaya sukarela", correct: false, exp: "Salah! Bantuan kemanusiaan tidak bermotif komersial." }
+        ]
+      },
+      { id: 4, title: "Gudang Logistik P3K", type: "item", icon: "fa-box-open", itemKey: "mitela", points: 15, isAction: true,
+        q: "Kamu menemukan persediaan kain pembalut segitiga. Apa nama alat ini dalam P3K?",
+        options: [
+          { text: "Mitela", correct: true, exp: "Bagus! Mitela adalah kain segitiga serbaguna untuk membalut dan menggendong lengan cedera." },
+          { text: "Kasa Roll", correct: false, exp: "Bukan, kasa roll berbentuk gulungan, sedangkan kain segitiga adalah mitela." }
+        ]
+      },
+      { id: 5, title: "Pos Lapangan Upacara", type: "medis", icon: "fa-person-falling", points: 25, isAction: true,
+        q: "Seorang teman pingsan saat terik matahari. Tindakan awal yang benar adalah:",
+        options: [
+          { text: "Bawa ke tempat teduh, posisikan terlentang, dan tinggikan tungkai kaki 15-30 cm", correct: true, exp: "Sempurna! Posisi syok membantu aliran darah kaya oksigen kembali menuju otak." },
+          { text: "Paksa korban segera meminum air teh hangat saat masih pingsan", correct: false, exp: "Fatal! Memberi minum orang yang tidak sadar memicu cairan masuk ke paru-paru (tersedak/aspirasi)." }
+        ]
+      },
+      { id: 6, title: "Prinsip Kesamaan", type: "prinsip", icon: "fa-scale-balanced", points: 20, isAction: true,
+        q: "Prinsip 'Kesamaan' (Impartiality) mengajarkan kita untuk:",
+        options: [
+          { text: "Membantu korban murni berdasarkan tingkat keparahan tanpa memandang suku/agama", correct: true, exp: "Tepat! Prioritas pertolongan ditentukan oleh kegawatdaruratan medis, bukan status sosial." },
+          { text: "Membantu keluarga sendiri terlebih dahulu meski lukanya ringan", correct: false, exp: "Keliru! Prinsip kesamaan melarang diskriminasi keluarga maupun golongan." }
+        ]
+      },
+      { id: 7, title: "Pos Koridor: Mimisan", type: "medis", icon: "fa-head-side-cough", points: 25, isAction: true,
+        q: "Siswa mimisan terkena pantulan bola basket. Posisi kepala korban yang tepat adalah:",
+        options: [
+          { text: "Duduk sedikit menunduk ke depan sambil menekan lembut cuping hidung", correct: true, exp: "Benar! Menunduk mencegah darah tertelan ke lambung atau menyumbat saluran napas." },
+          { text: "Mendongak ke atas setinggi mungkin sambil berbaring", correct: false, exp: "Mitos salah! Mendongak dapat menyebabkan darah masuk ke kerongkongan dan memicu muntah." }
+        ]
+      },
+      { id: 8, title: "Pos Logistik Kasa Steril", type: "item", icon: "fa-bandage", itemKey: "kasa", points: 15, isAction: true,
+        q: "Untuk menutup luka lecet agar terhindar dari kuman luar, perlengkapan yang digunakan adalah:",
+        options: [
+          { text: "Kasa Steril dan Plester", correct: true, exp: "Bagus! Kasa steril menjaga kebersihan luka terbuka." },
+          { text: "Kertas Tisu Bekas", correct: false, exp: "Salah! Tisu bekas mengandung bakteri dan seratnya dapat menempel di luka." }
+        ]
+      },
+      { id: 9, title: "Prinsip Netralitas", type: "prinsip", icon: "fa-hand-holding-heart", points: 20, isAction: true,
+        q: "Mengapa relawan Palang Merah tidak boleh memihak dalam permusuhan atau perselisihan politik?",
+        options: [
+          { text: "Agar senantiasa mendapat kepercayaan dari semua pihak saat bertugas", correct: true, exp: "Tepat! Netralitas menjaga keselamatan relawan dan akses pertolongan ke semua pihak." },
+          { text: "Agar tidak dipanggil oleh kepala sekolah", correct: false, exp: "Bukan alasan filosofis netralitas palang merah." }
+        ]
+      },
+      { id: 10, title: "Pos Tangga: Terkilir (Sprain)", type: "medis", icon: "fa-bone", points: 25, isAction: true,
+        q: "Seorang siswa pergelangan kakinya bengkak karena terkilir. Langkah penanganan pertama adalah:",
+        options: [
+          { text: "Protokol R.I.C.E (Istirahatkan, Kompres Dingin, Balut Tekan, Tinggikan)", correct: true, exp: "Tepat sekali! R.I.C.E mengurangi bengkak dan perdarahan jaringan otot/sendi." },
+          { text: "Langsung diurut dan ditarik pergelangan kakinya sekuat tenaga", correct: false, exp: "Bahaya! Memijat cedera baru dapat merobek ligamen yang cedera lebih parah." }
+        ]
+      },
+      { id: 11, title: "Pos Sanitasi & Cuci Tangan", type: "kesehatan", icon: "fa-hands-bubbles", points: 20, isAction: true,
+        q: "Langkah mencuci tangan memakai sabun standar WHO yang efektif membunuh kuman membutuhkan waktu minimal:",
+        options: [
+          { text: "40 - 60 detik", correct: true, exp: "Benar! 40-60 detik dengan 6 langkah menjangkau seluruh sela jari dan kuku." },
+          { text: "3 detik saja", correct: false, exp: "Salah! Terlalu cepat tidak membunuh bakteri dan kuman patogen." }
+        ]
+      },
+      { id: 12, title: "Pos Logistik Tandu Darurat", type: "item", icon: "fa-bed", itemKey: "tandu", points: 15, isAction: true,
+        q: "Berapa jumlah personil ideal untuk mengangkat tandu darurat saat evakuasi korban secara stabil?",
+        options: [
+          { text: "4 Personil (atau minimal 2 personil terlatih)", correct: true, exp: "Tepat! 4 personil menjaga keseimbangan posisi kepala dan kaki korban saat melintas." },
+          { text: "1 Orang menyeret korban sendirian", correct: false, exp: "Salah! Menyeret membahayakan tulang belakang korban." }
+        ]
+      },
+      { id: 13, title: "Prinsip Kemandirian", type: "prinsip", icon: "fa-dove", points: 20, isAction: true,
+        q: "Palang Merah membantu pemerintah di bidang kemanusiaan, namun harus selalu menjaga otonomi agar dapat bertindak sesuai prinsip. Ini adalah prinsip:",
+        options: [
+          { text: "Kemandirian (Independence)", correct: true, exp: "Betul! Kemandirian menjaga integritas gerakan kemanusiaan." },
+          { text: "Keserakahan", correct: false, exp: "Bukan prinsip palang merah." }
+        ]
+      },
+      { id: 14, title: "Pos Dapur Umum & Gizi", type: "sosial", icon: "fa-utensils", points: 20, isAction: true,
+        q: "Saat bencana banjir di daerah Pekuncen, makanan di dapur umum harus mengutamakan aspek:",
+        options: [
+          { text: "Higienis, bergizi seimbang, dan cepat saji aman", correct: true, exp: "Tepat! Menjaga stamina korban dan mencegah wabah diare di pengungsian." },
+          { text: "Makanan kadaluarsa sumbangan tak terpakai", correct: false, exp: "Sangat dilarang! Makanan kedaluwarsa berbahaya bagi pengungsi." }
+        ]
+      },
+      { id: 15, title: "Pos Donor Darah Remaja", type: "dds", icon: "fa-droplet", points: 25, isAction: true,
+        q: "Peran utama PMR Madya tingkat SMP dalam mendukung donor darah PMI adalah:",
+        options: [
+          { text: "Menjadi Peer Educator (Perekrut Donor Darah Sukarela pemula)", correct: true, exp: "Hebat! Anggota PMR Madya mengampanyekan pentingnya donor darah ke keluarga dan masyarakat sekitar." },
+          { text: "Menjadi pendonor langsung meski usia masih 12 tahun", correct: false, exp: "Belum boleh! Syarat usia donor darah minimal adalah 17 tahun." }
+        ]
+      },
+      { id: 16, title: "Prinsip Kesukarelaan", type: "prinsip", icon: "fa-handshake-angle", points: 20, isAction: true,
+        q: "Menjadi relawan PMR didasari oleh prinsip 'Kesukarelaan', artinya:",
+        options: [
+          { text: "Memberi pertolongan dengan tulus tanpa mengharapkan keuntungan finansial/upah", correct: true, exp: "Luar biasa! Sukarela adalah wujud ketulusan hati nurani kemanusiaan." },
+          { text: "Menolong hanya jika dibayar mahal dengan uang jajan", correct: false, exp: "Keliru! Gerakan palang merah bukan untuk mencari nafkah atau pamrih." }
+        ]
+      },
+      { id: 17, title: "Pos Mitigasi Bencana Pekuncen", type: "bencana", icon: "fa-house-flood-water", points: 25, isAction: true,
+        q: "Bila terjadi luapan banjir bandang mendadak di dekat sekolah/sungai, tindakan pertama adalah:",
+        options: [
+          { text: "Segera menuju ke titik kumpul/tempat tinggi dan matikan aliran listrik", correct: true, exp: "Tepat! Menghindari risiko tersengat listrik dan hanyut terbawa arus deras." },
+          { text: "Berenang dan berselfie di dekat arus sungai yang deras", correct: false, exp: "Sangat berbahaya! Bisa berakibat korban jiwa akibat arus pusaran." }
+        ]
+      },
+      { id: 18, title: "Prinsip Kesatuan & Kesemestaan", type: "prinsip", icon: "fa-earth-asia", points: 20, isAction: true,
+        q: "Dalam 1 negara hanya boleh ada SATU Perhimpunan Palang Merah/Bulan Sabit Merah. Di Indonesia adalah PMI. Ini adalah prinsip:",
+        options: [
+          { text: "Kesatuan (Unity)", correct: true, exp: "Tepat! Hanya ada satu perhimpunan nasional yang terbuka untuk seluruh wilayah negeri." },
+          { text: "Individualisme", correct: false, exp: "Bukan prinsip palang merah." }
+        ]
+      },
+      { id: 19, title: "Pos Tri Bakti PMR", type: "pmr", icon: "fa-medal", points: 25, isAction: true,
+        q: "Tiga janji bakti anggota PMR (Tri Bakti) yang selalu diamalkan adalah:",
+        options: [
+          { text: "Meningkatkan keterampilan hidup sehat, Berkarya & berbakti di masyarakat, Mempererat persahabatan nasional & internasional", correct: true, exp: "Sempurna! Inilah ruh pergerakan anggota PMR Madya!" },
+          { text: "Bermain game sepanjang hari, Datang terlambat ke sekolah, Menghindari piket", correct: false, exp: "Tentu bukan!" }
+        ]
+      },
+      { id: 20, title: "Pos Puncak Kemanusiaan", type: "finish", icon: "fa-trophy", desc: "Garis akhir ekspedisi kemanusiaan relawan sejati!", isAction: false }
+    ];
+
+    // Audio Synthesizer Tanpa File Eksternal (Web Audio API)
+    function playSound(type) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === 'dice') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(180, ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.3, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.15);
+        } else if (type === 'correct') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+          osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.1); // E5
+          osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.2); // G5
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.35);
+        } else if (type === 'wrong') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, ctx.currentTime);
+          osc.frequency.setValueAtTime(170, ctx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.2, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.3);
+        }
+      } catch (err) {}
+    }
+
+    // Memulai Ekspedisi
+    function initExpedition(e) {
+      e.preventDefault();
+      state.player.name = document.getElementById('player-name').value.trim();
+      state.player.class = document.getElementById('player-class').value;
+      state.player.unit = document.getElementById('player-unit').value;
+
+      document.getElementById('screen-setup').classList.add('hidden');
+      document.getElementById('screen-board').classList.remove('hidden');
+      document.getElementById('screen-board').classList.add('flex');
+      document.getElementById('top-status-bar').classList.remove('hidden');
+
+      // Update Label Dashboard
+      document.getElementById('board-name').innerText = state.player.name;
+      document.getElementById('board-badge').innerText = state.player.unit;
+      document.getElementById('top-score').innerText = state.score;
+
+      renderBoard();
+      updatePlayerPositionVisual();
+    }
+
+    // Render 20 Pos Papan Permainan
+    function renderBoard() {
+      const grid = document.getElementById('board-grid');
+      grid.innerHTML = '';
+
+      boardPositions.forEach((pos, idx) => {
+        const isCurrent = (idx === state.currentPos);
+        const isCleared = state.clearedPositions.includes(idx);
+
+        const card = document.createElement('div');
+        card.id = `tile-${idx}`;
+        card.className = `p-3.5 rounded-2xl border-2 transition-all flex flex-col justify-between min-h-[105px] relative ${
+          isCurrent 
+            ? 'border-red-600 bg-red-50 tile-active' 
+            : isCleared
+              ? 'border-emerald-300 bg-emerald-50/50'
+              : 'border-slate-200 bg-white hover:border-slate-300'
+        }`;
+
+        let typeBadgeColor = 'bg-slate-100 text-slate-600';
+        if (pos.type === 'start') typeBadgeColor = 'bg-blue-100 text-blue-700';
+        if (pos.type === 'finish') typeBadgeColor = 'bg-amber-100 text-amber-700';
+        if (pos.type === 'medis') typeBadgeColor = 'bg-rose-100 text-rose-700';
+        if (pos.type === 'prinsip') typeBadgeColor = 'bg-purple-100 text-purple-700';
+        if (pos.type === 'item') typeBadgeColor = 'bg-emerald-100 text-emerald-700';
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-extrabold text-slate-700">
+              ${pos.id}
+            </span>
+            <span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${typeBadgeColor} uppercase tracking-tight">
+              ${pos.type}
+            </span>
+          </div>
+
+          <div class="my-1.5">
+            <h5 class="text-xs font-bold text-slate-800 line-clamp-1">${pos.title}</h5>
+          </div>
+
+          <div class="flex items-center justify-between text-slate-400 text-xs">
+            <i class="fa-solid ${pos.icon}"></i>
+            ${isCurrent ? '<span class="text-[10px] bg-red-600 text-white font-extrabold px-1.5 py-0.5 rounded-full flex items-center gap-1 animate-pulse"><i class="fa-solid fa-location-dot"></i> Relawan</span>' : ''}
+            ${isCleared && !isCurrent ? '<i class="fa-solid fa-circle-check text-emerald-500"></i>' : ''}
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    // Perbarui Tampilan Posisi Relawan
+    function updatePlayerPositionVisual() {
+      const curPos = boardPositions[state.currentPos];
+      document.getElementById('board-current-tile').innerText = `Pos ${curPos.id} (${curPos.title})`;
+      document.getElementById('top-pos').innerText = `${curPos.id} / 20`;
+      document.getElementById('top-score').innerText = state.score;
+      renderBoard();
+    }
+
+    // Animasi Lempar Dadu
+    function rollDice() {
+      if (state.isRolling) return;
+      state.isRolling = true;
+
+      const btn = document.getElementById('btn-roll');
+      btn.disabled = true;
+      btn.classList.add('opacity-50', 'cursor-not-allowed');
+
+      const diceCube = document.getElementById('dice');
+      const diceResult = Math.floor(Math.random() * 6) + 1;
+
+      playSound('dice');
+
+      // Animasi Putaran 3D acak
+      const xRot = 720 + (Math.floor(Math.random() * 4) * 90);
+      const yRot = 720 + (Math.floor(Math.random() * 4) * 90);
+      diceCube.style.transform = `rotateX(${xRot}deg) rotateY(${yRot}deg)`;
+
+      setTimeout(() => {
+        // Rotasi sesuai angka dadu
+        let finalX = 0, finalY = 0;
+        switch(diceResult) {
+          case 1: finalX = 0; finalY = 0; break;
+          case 2: finalX = 0; finalY = -90; break;
+          case 3: finalX = 0; finalY = -180; break;
+          case 4: finalX = 0; finalY = 90; break;
+          case 5: finalX = -90; finalY = 0; break;
+          case 6: finalX = 90; finalY = 0; break;
+        }
+        diceCube.style.transform = `rotateX(${finalX}deg) rotateY(${finalY}deg)`;
+        
+        setTimeout(() => {
+          advancePlayer(diceResult);
+          btn.disabled = false;
+          btn.classList.remove('opacity-50', 'cursor-not-allowed');
+          state.isRolling = false;
+        }, 600);
+      }, 700);
+    }
+
+    // Pergerakan Relawan Melintasi Pos
+    function advancePlayer(steps) {
+      let targetPos = state.currentPos + steps;
+      if (targetPos >= boardPositions.length - 1) {
+        targetPos = boardPositions.length - 1; // Puncak Pos 20
+      }
+
+      state.currentPos = targetPos;
+      updatePlayerPositionVisual();
+
+      // Eksekusi Misi Pos
+      setTimeout(() => {
+        handleCurrentPosChallenge();
+      }, 400);
+    }
+
+    // Tantangan Pos
+    function handleCurrentPosChallenge() {
+      const pos = boardPositions[state.currentPos];
+
+      // Jika Pos Akhir (Pos 20)
+      if (pos.id === 20) {
+        playSound('correct');
+        showCertificate();
+        return;
+      }
+
+      // Jika Pos Non-Aksi
+      if (!pos.isAction) {
+        return;
+      }
+
+      // Tampilkan Modal Tantangan
+      openPosModal(pos);
+    }
+
+    // Modal Manajemen
+    function openPosModal(pos) {
+      const modal = document.getElementById('modal-card');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      document.getElementById('modal-pos-number').innerText = `Pos #${pos.id}`;
+      document.getElementById('modal-badge-type').innerText = pos.type;
+      document.getElementById('modal-points').innerText = `+${pos.points} Poin`;
+      document.getElementById('modal-title').innerText = pos.title;
+      document.getElementById('modal-narrative').innerText = pos.q;
+
+      const optBox = document.getElementById('modal-options');
+      optBox.innerHTML = '';
+      const feedback = document.getElementById('modal-feedback');
+      feedback.classList.add('hidden');
+      const nextBtn = document.getElementById('modal-btn-next');
+      nextBtn.classList.add('hidden');
+
+      pos.options.forEach((opt, idx) => {
+        const b = document.createElement('button');
+        b.className = "w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-red-500 hover:bg-red-50 text-xs sm:text-sm font-semibold transition-all flex items-start gap-3";
+        b.innerHTML = `
+          <span class="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5">${String.fromCharCode(65 + idx)}</span>
+          <span class="text-slate-700 leading-snug">${opt.text}</span>
+        `;
+        b.onclick = () => selectOption(opt, b, pos);
+        optBox.appendChild(b);
+      });
+    }
+
+    function selectOption(option, btnElem, pos) {
+      const allBtns = document.getElementById('modal-options').querySelectorAll('button');
+      allBtns.forEach(btn => btn.disabled = true);
+
+      const feedback = document.getElementById('modal-feedback');
+      feedback.classList.remove('hidden');
+
+      if (option.correct) {
+        playSound('correct');
+        state.score += pos.points;
+        btnElem.classList.add('border-emerald-500', 'bg-emerald-50');
+        feedback.className = "p-4 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-900 text-xs sm:text-sm";
+        feedback.innerHTML = `<strong>Tindakan Benar!</strong> ${option.exp}`;
+
+        // Jika Pos Item Tas P3K
+        if (pos.itemKey) {
+          state.inventory[pos.itemKey] = true;
+          updateInventoryUI(pos.itemKey);
+        }
+      } else {
+        playSound('wrong');
+        btnElem.classList.add('border-rose-500', 'bg-rose-50');
+        feedback.className = "p-4 rounded-2xl border border-rose-200 bg-rose-50 text-rose-900 text-xs sm:text-sm";
+        feedback.innerHTML = `<strong>Catatan Evaluasi:</strong> ${option.exp}`;
+      }
+
+      state.clearedPositions.push(state.currentPos);
+      document.getElementById('top-score').innerText = state.score;
+      document.getElementById('modal-btn-next').classList.remove('hidden');
+    }
+
+    function updateInventoryUI(key) {
+      const elem = document.getElementById(`inv-${key}`);
+      if (elem) {
+        elem.classList.remove('text-slate-400', 'bg-white');
+        elem.classList.add('bg-emerald-100', 'text-emerald-800', 'border-emerald-300', 'font-bold');
+      }
+    }
+
+    function closePosModal() {
+      document.getElementById('modal-card').classList.add('hidden');
+      document.getElementById('modal-card').classList.remove('flex');
+      updatePlayerPositionVisual();
+    }
+
+    // Tampilkan Piagam Kelulusan Ekspedisi
+    function showCertificate() {
+      document.getElementById('screen-board').classList.add('hidden');
+      document.getElementById('screen-finish').classList.remove('hidden');
+      document.getElementById('screen-finish').classList.add('flex');
+
+      document.getElementById('cert-player-name').innerText = state.player.name || "Siswa PMR Madya";
+      document.getElementById('cert-player-class').innerText = state.player.class;
+      document.getElementById('cert-player-unit').innerText = state.player.unit;
+      document.getElementById('cert-total-score').innerText = state.score;
+
+      const dateNow = new Date();
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      document.getElementById('cert-print-date').innerText = `Pekuncen, ${dateNow.toLocaleDateString('id-ID', options)}`;
+
+      const rankElem = document.getElementById('cert-rank-title');
+      if (state.score >= 200) {
+        rankElem.innerText = "KOMANDAN MUDA RELAWAN TELADAN";
+      } else if (state.score >= 140) {
+        rankElem.innerText = "RELAWAN TANGGAP & BEREMPATI TINGGI";
+      } else {
+        rankElem.innerText = "KADER RELAWAN MUDA BERPOTENSI";
+      }
+    }
+
+    // Reset Ekspedisi
+    function restartExpedition() {
+      state.currentPos = 0;
+      state.score = 0;
+      state.clearedPositions = [];
+      state.inventory = { mitela: false, kasa: false, tandu: false };
+
+      ['mitela', 'kasa', 'tandu'].forEach(k => {
+        const el = document.getElementById(`inv-${k}`);
+        if (el) {
+          el.className = "px-2.5 py-1 bg-white rounded-lg border border-slate-200 text-slate-400 font-medium";
+        }
+      });
+
+      document.getElementById('screen-finish').classList.add('hidden');
+      document.getElementById('screen-setup').classList.remove('hidden');
+      document.getElementById('top-status-bar').classList.add('hidden');
+    }
+  </script>
+</body>
+</html>
